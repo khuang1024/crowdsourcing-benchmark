@@ -32,13 +32,9 @@
             alert ("Please choose one image.");
         }
     }
-    function xsubmit(){
-        if (validate()){
-            document.binaryForm.action='binary_process.php';
-            document.binaryForm.submit();
-        } else {
-            alert ("Please choose one image.");
-        }
+    function stop(){
+        document.binaryForm.action='binary_process.php';
+        document.binaryForm.submit();
     }
 </script>
 </head>
@@ -50,7 +46,7 @@
         <p>The payment depends on <font color="red">the number of images</font>. Each image is $0.01 .</p>
         <p>You can work on as many images as you like, and stop whenever you want.</p>
         <p>Click "Next" button to continue this task.</p>
-        <p>Click "Submit" button to finish task.</p>
+        <p>Click "Stop" button to finish task.</p>
 
 <?php
 function getRandomString() {
@@ -172,7 +168,7 @@ echo "    <input type=\"hidden\" name=\"img2\" value=\"$img2\"></input>";
 echo "    <input type=\"hidden\" name=\"counter\" value=\"$counter\"></input>";
 echo "    <input type=\"hidden\" name=\"token\" value=\"$token\"></input>";
 echo "    <input type=\"button\" name=\"Next\" value=\"Next\" onClick=\"next()\" />";
-echo "    <input type=\"button\" name=\"Submit\" value=\"Submit\" onClick=\"xsubmit()\" />";
+echo "    <input type=\"button\" name=\"Stop\" value=\"Stop\" onClick=\"stop()\" />";
 echo "<br />";
 echo "<br />";
 echo "So far, you have already done <font color=\"red\"> $counter </font> images.";

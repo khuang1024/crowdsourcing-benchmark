@@ -10,37 +10,6 @@
 <script type="text/javascript" src="Arial_400-Arial_700.font.js"></script>
 <script type="text/javascript" src="general.js"></script>
 <script type="text/javascript" src="./ZeroClipboard.js"></script>
-<script language="javascript">
-    var clip = null;
-    function init(){
-        // set path
-        ZeroClipboard.setMoviePath('./ZeroClipboard.swf');
-
-        //create client
-        clip = new ZeroClipboard.Client();
-        clip.setHandCursor( true );
-
-        clip.addEventListener('load', function (client) {
-            alert("hello");
-            alert(document.getElementById('token').value);
-        });
-
-        //event
-        clip.addEventListener('mouseOver',function(client) {
-            //alert("asdadsads");
-            //document.write(document.getElementById('token'));
-            alert(document.getElementById('token').value);
-            //clip.setText(document.getElementById('box-content').value);
-        });
-
-        clip.addEventListener('complete', function(client,text) {
-          alert('copied: ' + text);
-        });
-
-        //glue it to the button
-        clip.glue('copy');
-    }
-</script>
 <style type="text/css">
     body {
         margin:0 auto;
@@ -48,7 +17,7 @@
     }
 </style>
 </head>
-<body onLoad="init()">
+<body>
 <?php
 function writeLog($fileName, $content) {
     if (is_writable($fileName)) {
@@ -69,36 +38,15 @@ function writeLog($fileName, $content) {
     }
 }
 function sec2hms ($sec, $padHours = false) {
-
-    // start with a blank string
     $hms = "";
-    
-    // do the hours first: there are 3600 seconds in an hour, so if we divide
-    // the total number of seconds by 3600 and throw away the remainder, we're
-    // left with the number of hours in those seconds
     $hours = intval(intval($sec) / 3600); 
-
-    // add hours to $hms (with a leading 0 if asked for)
     $hms .= ($padHours) 
           ? str_pad($hours, 2, "0", STR_PAD_LEFT). ":"
           : $hours. ":";
-    
-    // dividing the total seconds by 60 will give us the number of minutes
-    // in total, but we're interested in *minutes past the hour* and to get
-    // this, we have to divide by 60 again and then use the remainder
     $minutes = intval(($sec / 60) % 60); 
-
-    // add minutes to $hms (with a leading 0 if needed)
     $hms .= str_pad($minutes, 2, "0", STR_PAD_LEFT). ":";
-
-    // seconds past the minute are found by dividing the total number of seconds
-    // by 60 and using the remainder
     $seconds = intval($sec % 60); 
-
-    // add seconds to $hms (with a leading 0 if needed)
     $hms .= str_pad($seconds, 2, "0", STR_PAD_LEFT);
-
-    // done!
     return $hms;
 }
 function time_difference($endtime){
@@ -123,8 +71,14 @@ $img1 = $_POST['img1'];
 $img2 = $_POST['img2'];
 $counter = intval($_POST['counter']) + 2;
 $fileName = "log.txt";
-$content = $answer.$delimiter.$img1.$delimiter.$img2.$delimiter.$token.$delimiter.(strval($counter)).$delimiter.gmdate("F-d-H:i:s", $startTime).$delimiter.gmdate("F-d-H:i:s", $endTime).$delimiter.time_difference($startTime - $endTime)."\n";
-writeLog("log.txt", $content."\n");
+
+if (is_null($answer)) {
+    $counter = $_POST['counter'];
+} else {
+    $counter = $_POST['counter'] + 2;
+    $content = $answer.$delimiter.$img1.$delimiter.$img2.$delimiter.$token.$delimiter.(strval($counter)).$delimiter.gmdate("F-d-H:i:s", $startTime).$delimiter.gmdate("F-d-H:i:s", $endTime).$delimiter.time_difference($startTime - $endTime)."\n";
+    writeLog("log.txt", $content."\n");
+}
 
 // confirmation
 echo "<br />";
