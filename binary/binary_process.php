@@ -50,16 +50,6 @@
 </head>
 <body onLoad="init()">
 <?php
-function getRandomString() {
-    $length = 10;
-    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $string = '';
-    for ($i = 0; $i < $length; $i++) {
-        $string .= $characters[mt_rand(0, strlen($characters))];
-    }
-    return $string;
-}
-
 function writeLog($fileName, $content) {
     if (is_writable($fileName)) {
         if (!$handle = fopen($fileName, 'a')) {
@@ -110,17 +100,31 @@ function sec2hms ($sec, $padHours = false) {
 
     // done!
     return $hms;
-    
-  }
+}
+function time_difference($endtime){
+    $days= (date("j",$endtime)-1);
+    $months =(date("n",$endtime)-1);
+    $years =(date("Y",$endtime)-1970);
+    $hours =date("G",$endtime);
+    $mins =date("i",$endtime);
+    $secs =date("s",$endtime);
+    $diff="day=".$days."&month=".$months."&year=".$years."&hour=".$hours."&min=".$mins."&sec=".$secs;
+    return $diff;
+}
+
 
 // store info on server
-$img = $_POST['img'];
+$delimiter = ", ";
+$startTime = $_POST['startTime'];
+$endTime = time();
+$token = $_POST['token'];
+$answer = $_POST['answer'];
 $img1 = $_POST['img1'];
 $img2 = $_POST['img2'];
-$startTime = $_POST['startTime'];
-$token = getRandomString();
-$content = $img.",".$img1.",".$img2.",".$token.sec2hms(time(), true);
-writeLog("test.txt", $content."\n");
+$counter = intval($_POST['counter']) + 2;
+$fileName = "log.txt";
+$content = $answer.$delimiter.$img1.$delimiter.$img2.$delimiter.$token.$delimiter.(strval($counter)).$delimiter.gmdate("F-d-H:i:s", $startTime).$delimiter.gmdate("F-d-H:i:s", $endTime).$delimiter.time_difference($startTime - $endTime)."\n";
+writeLog("log.txt", $content."\n");
 
 // confirmation
 echo "<br />";
@@ -132,11 +136,10 @@ echo "<br />";
 echo "<h3>";
 echo "Submitted successful, thank you! <br />\n";
 echo "<br />";
-echo "Please use this token as your answer token: ";
+echo "You processed <font color=\"red\">$counter</font> images.<br /> Please use the token below as your answer token: ";
+echo "<br />";
+echo "<br />";
 echo "<font color=\"red\"><div id=\"token\" value=\"$token\">".$token."</div></font><br />\n";
-echo "Start time: ".gmdate("F-d-H:i:s", $startTime)."<br />\n";
-echo "Now time: ".gmdate("F-d-H:i:s", time())."<br />\n";
-echo "<button id=\"copy\" >Copy to clipboard.</button>\n";
 echo "</h3>\n";
 //echo "</center>";
 ?>
