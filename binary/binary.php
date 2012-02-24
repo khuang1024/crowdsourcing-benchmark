@@ -33,7 +33,7 @@
         }
     }
     function stop(){
-        document.binaryForm.action='binary_process.php';
+        document.binaryForm.action='binary_done.php';
         document.binaryForm.submit();
     }
 </script>
